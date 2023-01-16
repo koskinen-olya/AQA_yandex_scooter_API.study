@@ -13,12 +13,11 @@ public class TestListOrder {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
     }
 
-
     @Test
     @DisplayName("Тестирование метода получения списка заказов")
     public void testGetListOrder() {
-        MethodsAPI methodAPI = new MethodsAPI();
-        Response response = methodAPI.getListOrder();
+        OrdersClient ordersClient = new OrdersClient();
+        Response response = ordersClient.getListOrder();
         response.then().assertThat().statusCode(200);
         response.then().assertThat().body(notNullValue());
     }

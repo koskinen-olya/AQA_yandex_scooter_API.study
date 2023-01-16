@@ -24,7 +24,7 @@ public class TestLoginCourier {
         this.expectedMessage = expectedMessage;
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Тестовые данные: {0} {1} {2} {3}")
     public static Object[][] getCredentials() {
         return new Object[][]{
                 {"CourierNumberOne", "12345", 200, ""},
@@ -39,19 +39,18 @@ public class TestLoginCourier {
     @Before
     public void setUp() {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
-        MethodsAPI methodsAPI = new MethodsAPI();
+        CourierClient courierClient = new CourierClient();
         //Добавляем тестовую учетку для проверки успешного первого login
-        methodsAPI.addCourier("CourierNumberOne", "12345", "courier1");
+        courierClient.addCourier("CourierNumberOne", "12345", "courier1");
         //На всякий случай удаляем учетку для проверки несуществующего пользователя
-        methodsAPI.deleteCourier("CourierNumberTwo", "12345");
+        courierClient.deleteCourier("CourierNumberTwo", "12345");
     }
-
 
     @Test
     @DisplayName("Тестирование метода логина курьера")
     public void testLoginCourier() {
-        MethodsAPI methodsAPI = new MethodsAPI();
-        Response response = methodsAPI.loginCourier(login, password);
+        CourierClient courierClient = new CourierClient();
+        Response response = courierClient.loginCourier(login, password);
         response.then().assertThat().statusCode(expectedCode);
         if (expectedCode == 200) {
             response.then().assertThat().body("id", notNullValue());

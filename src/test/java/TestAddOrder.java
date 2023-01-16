@@ -20,7 +20,6 @@ public class TestAddOrder {
     private final String comment;
     private final String[] color;
 
-
     public TestAddOrder(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment, String[] color) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,8 +32,7 @@ public class TestAddOrder {
         this.color = color;
     }
 
-
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Тестовые данные: {0} {1} {2} {3}")
     public static Object[][] getCredentials() {
         return new Object[][]{
                 {"Naruto", "Uchiha", "Konoha", "4", "800553535", 5, "2020", "Saske", new String[]{"BLACK", "GREY"}},
@@ -49,12 +47,11 @@ public class TestAddOrder {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
     }
 
-
     @Test
     @DisplayName("Тестирование метода создания заказа")
     public void testAddOrder() {
-        MethodsAPI methodAPI = new MethodsAPI();
-        Response response = methodAPI.createOrder(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color);
+        OrdersClient ordersClient = new OrdersClient();
+        Response response = ordersClient.createOrder(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color);
         response.then().assertThat().statusCode(201);
         response.then().assertThat().body("track", notNullValue());
     }
